@@ -25,6 +25,9 @@ public class Gui extends javax.swing.JFrame {
         boolean blnFirstTime = true;
         
         jTextArea2.setText("");
+        
+        if (jTextField1.getText().length() > 0)
+        {
         String trazi = jTextField1.getText().toLowerCase();
  
         try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHCro-ansi.txt")))
@@ -33,15 +36,15 @@ public class Gui extends javax.swing.JFrame {
         {
             while (scanner.hasNext()) 
             {
-                strEngLn = scanner.nextLine();                         //first line from dictionary (eng and cro together separated with tab
+                strEngLn = scanner.nextLine().toLowerCase();           //first line from dictionary (eng and cro together separated with tab
                     
                    int a = strEngLn.indexOf("\t");
                    if(a != -1){
-                   boolean b = strEngLn.startsWith(trazi,a+1);             // find out if wonted word is finded in current line after tab
+                   boolean b = strEngLn.startsWith(trazi,a+1);         // find out if wonted word is finded in current line after tab
                    if (b)
                    {
-                            strEng1 = strEngLn.substring(0,a).toLowerCase();         //english word put to string
-                            strEng2 = strEngLn.substring(a+1).toLowerCase();         //cro word put to string
+                            strEng1 = strEngLn.substring(0,a);         //english word put to string
+                            strEng2 = strEngLn.substring(a+1);         //cro word put to string
                             
                             if (strEngDouble.equals(strEng2))          //if cro word is same as last one from the loop
                             {
@@ -63,15 +66,19 @@ public class Gui extends javax.swing.JFrame {
                    }
                 }
               }
-            jTextArea2.append(strFinish);                                //finally make everything appear
+            //jTextArea2.append(strFinish);                             
+            jTextArea2.setText(strFinish);                              //finally make everything appear
+            //jTextArea2.getSelectedText()
+            
          }
-            catch (FileNotFoundException fnfe) 
+            catch (FileNotFoundException e) 
             {
-            fnfe.printStackTrace();
-            jTextField1.setText("Database missing!");                       //print error in search textBox
+                jTextArea2.setText(e.getMessage());                     //print error in result text area
+                
+                //JOptionPane.showMessageDialog(JFrame, e.getMessage());
             }
     }
-            
+    }
     
     public void DoEng()
     
@@ -84,16 +91,18 @@ public class Gui extends javax.swing.JFrame {
         boolean blnFirstTime = true;
         
         jTextArea1.setText("");
-        String trazi = jTextField1.getText();
+        if (jTextField1.getText().length() > 0)                      //if search text is not empty, only then search
+        {
+        String trazi = jTextField1.getText().toLowerCase();
  
         try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHEng-ansi.txt")))
         //try (Scanner scanner = new Scanner(new File(Gui.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()+ "EHEng-ansi.txt"))
         {
             while (scanner.hasNext()) 
             {
-                strEngLn = scanner.nextLine();                         //first line from dictionary (eng and cro together separated with tab
+                strEngLn = scanner.nextLine().toLowerCase();                         //first line from dictionary (eng and cro together separated with tab
         
-                   boolean b = strEngLn.startsWith(trazi);             // find out if wonted word is finded in current line
+                   boolean b = strEngLn.startsWith(trazi);             // find out if current line begins with wanted word
                    if (b)
                    {
                         int a = strEngLn.indexOf("\t");                //find location of tab key which eng and cro words are separated with
@@ -122,14 +131,15 @@ public class Gui extends javax.swing.JFrame {
                         }
                    }
               }
-            jTextArea1.append(strFinish);                                //finally make everything appear
+            jTextArea1.setText(strFinish);                                //finally make everything appear
          }
-            catch (FileNotFoundException fnfe) 
+            catch (FileNotFoundException e) 
             {
-            fnfe.printStackTrace();
-            jTextField1.setText("Database missing!");
+                jTextArea1.setText(e.getMessage());                    //print error in text area
             }
+        }
     }
+
 
     /**
      * Creates new form Gui
