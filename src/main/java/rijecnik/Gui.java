@@ -17,18 +17,18 @@ public class Gui extends javax.swing.JFrame {
     
     public void DoCro()
     {     
-        String strEngLn;
-        String strEng1 = "";
-        String strEng2 = "";
-        String strEngDouble = "";
-        String strFinish = "";
-        boolean blnFirstTime = true;
+        String strEngLn;                // variable that holds one line from dictionary, eng and cro
+        String strEng1 = "";            //variable that holds english word
+        String strEng2 = "";            //variable that holds croatian word
+        String strEngDouble = "";       // variable that holds last found word because there are multiple same words in dictionary
+        String strFinish = "";          //variable that holds result
+        boolean blnFirstTime = true;    //if run for first time, cosmetic...
         
         jTextArea2.setText("");
         
         if (jTextField1.getText().length() > 0)
         {
-        String trazi = jTextField1.getText().toLowerCase();
+        String trazi = jTextField1.getText().toLowerCase(); //word to be found
  
         try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHCro-ansi.txt")))
         //try (Scanner scanner = new Scanner(new File(Gui.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()+ "EHEng-ansi.txt"))
@@ -169,6 +169,7 @@ public class Gui extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("English-Croatian dictionary");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +254,7 @@ public class Gui extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
