@@ -67,7 +67,8 @@ public class Gui extends javax.swing.JFrame {
                 }
               }
             //jTextArea2.append(strFinish);                             
-            jTextArea2.setText(strFinish);                              //finally make everything appear
+            jTextArea2.setText(strFinish);  //finally make everything appear
+            jTextArea2.setCaretPosition(0); //scroll text to the top
             //jTextArea2.getSelectedText()
             
          }
@@ -131,11 +132,13 @@ public class Gui extends javax.swing.JFrame {
                         }
                    }
               }
-            jTextArea1.setText(strFinish);                                //finally make everything appear
+            jTextArea1.setText(strFinish);  //finally make everything appear
+            jTextArea1.setCaretPosition(0); //scroll text to the top
          }
             catch (FileNotFoundException e) 
             {
-                jTextArea1.setText(e.getMessage());                    //print error in text area
+                jTextArea1.setText(e.getMessage());
+                //print error in text area
             }
         }
     }
