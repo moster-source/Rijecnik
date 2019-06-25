@@ -11,15 +11,26 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author virt7
+ * @author moster-source
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  */
 public class Gui extends javax.swing.JFrame {
     
     public void DoCro()
+            
+            /**
+             * This method populate right text area, it searches
+             * croatian database.
+             */
     {     
         String strEngLn;                // variable that holds one line from dictionary, eng and cro
         String strEng1 = "";            //variable that holds english word
-        String strEng2 = "";            //variable that holds croatian word
+        String strCro1 = "";            //variable that holds croatian word
         String strEngDouble = "";       // variable that holds last found word because there are multiple same words in dictionary
         String strFinish = "";          //variable that holds result
         boolean blnFirstTime = true;    //if run for first time, cosmetic...
@@ -28,60 +39,91 @@ public class Gui extends javax.swing.JFrame {
         
         if (jTextField1.getText().length() > 0)
         {
-        String trazi = jTextField1.getText().toLowerCase(); //word to be found
+        //word to be found
+        String trazi = jTextField1.getText().toLowerCase(); 
  
-        try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHCro-ansi.txt")))
-        //try (Scanner scanner = new Scanner(new File(Gui.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()+ "EHEng-ansi.txt"))
+            /**
+             * Leftovers from previous solutions
+             * 
+            * try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHCro-ansi.txt")))
+            * try (Scanner scanner = new Scanner(new File(Gui.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()+ "EHEng-ansi.txt"))
+            * try (Scanner scanner = new Scanner(new File("./EHCro-ansi.txt")))
+            * try (Scanner scanner = new Scanner(new File("EHCro-ansi.txt")))
+            * while (scanner.hasNext()) 
+            * strEngLn = scanner.nextLine().toLowerCase(); 
+            */
             
-        {
-            while (scanner.hasNext()) 
-            {
-                strEngLn = scanner.nextLine().toLowerCase();           //first line from dictionary (eng and cro together separated with tab
-                    
+            //Load databases directly from .jar
+             InputStream inp = getClass().getClassLoader().getResourceAsStream("EHCro-ansi.txt");
+             BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
+             
+             try 
+             {
+                while (null != (strEngLn = rd.readLine()))  //first line from dictionary (eng and cro together separated with tab 
+                {
+                   //find location of TabKey which separates translation
                    int a = strEngLn.indexOf("\t");
-                   if(a != -1){
-                   boolean b = strEngLn.startsWith(trazi,a+1);         // find out if wonted word is finded in current line after tab
-                   if (b)
+                   if(a != -1)
                    {
-                            strEng1 = strEngLn.substring(0,a);         //english word put to string
-                            strEng2 = strEngLn.substring(a+1);         //cro word put to string
+                       // find out if wonted word is founded in current line after tab 
+                       boolean b = strEngLn.toLowerCase().startsWith(trazi, a+1);         
+                            if (b)
+                            {
+                                //separate english and croatian words
+                                strEng1 = strEngLn.substring(0,a);         
+                                strCro1 = strEngLn.substring(a+1);         
                             
-                            if (strEngDouble.equals(strEng2))          //if cro word is same as last one from the loop
-                            {
-                               strFinish = strFinish + ", " + strEng2; //if cro word is same like last one, just add cro word on top
-                            }
-                            else
-                            {
-                                if (blnFirstTime)                      //if everything was run for the first time, cosmetic polish to not have first line empty in textbox
+                                //if cro word is same as last one from the loop
+                                //there are possibly many same words with different meaning
+                                if (strEngDouble.equals(strCro1))          
                                 {
-                                    strFinish = strFinish + strEng2 + " - " + strEng1;  //if original cro word was found, make whole line eng and cro words together
-                                    blnFirstTime = false;               //disable variable for discovering first time run
+                                    //if cro word is same like last one, just add cro word on top
+                                    strFinish = strFinish + ", " + strCro1; 
                                 }
                                 else
                                 {
-                                strFinish = strFinish + "\n" + strEng2 + " - " + strEng1;  //if cro word was original, but not first time running search add new line
-                                }
+                                    //if everything was run for the first time, cosmetic polish to not have first line empty in textbox
+                                    if (blnFirstTime)                      
+                                    {
+                                        //if original cro word was found, make whole line eng and cro words together
+                                        strFinish = strFinish + strCro1 + " - " + strEng1;  
+                                        blnFirstTime = false;          
+                                    }
+                                else
+                                    {
+                                    //if cro word was original, but not first time running search add new line
+                                    strFinish = strFinish + "\n" + strCro1 + " - " + strEng1;  
+                                    }
                             }
-                            strEngDouble = strEng2;                     //variable that copy last eng word to see is it the same like last one, because database has duplicates
-                   }
+                                //copy last founded word for comparison in next loop if there is duplicates
+                                strEngDouble = strCro1;            
+                            }
+                    }
+              
                 }
-              }
-            //jTextArea2.append(strFinish);                             
-            jTextArea2.setText(strFinish);  //finally make everything appear
-            jTextArea2.setCaretPosition(0); //scroll text to the top
-            //jTextArea2.getSelectedText()
-            
-         }
-            catch (FileNotFoundException e) 
-            {
-                jTextArea2.setText(e.getMessage());                     //print error in result text area
                 
+                //finally make everything appear, and scroll text to the top
+                jTextArea2.setText(strFinish);  
+                jTextArea2.setCaretPosition(0); 
+            }
+             
+            //catch (FileNotFoundException e) 
+            catch(IOException e)
+            {
+                //show error in text area
+                jTextArea2.setText(e.getMessage());
                 //JOptionPane.showMessageDialog(JFrame, e.getMessage());
             }
     }
     }
     
     public void DoEng()
+            
+             /**
+             * This method is almost same as DoCro, it populates
+             * left text area.
+             * In future it will be combined
+             */
     
     {     
         String strEngLn;
@@ -96,14 +138,20 @@ public class Gui extends javax.swing.JFrame {
         {
         String trazi = jTextField1.getText().toLowerCase();
  
-        try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHEng-ansi.txt")))
+        //try (Scanner scanner = new Scanner(new File("C:\\Users\\virt7\\Documents\\NetBeansProjects\\rijecnik\\src\\main\\resources\\EHEng-ansi.txt")))
         //try (Scanner scanner = new Scanner(new File(Gui.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath()+ "EHEng-ansi.txt"))
+        //try (Scanner scanner = new Scanner(new File("./EHEng-ansi.txt")))
+        //try (Scanner scanner = new Scanner(new File("EHEng-ansi.txt")))
+        InputStream inp = getClass().getClassLoader().getResourceAsStream("EHEng-ansi.txt");
+             BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
+             try
         {
-            while (scanner.hasNext()) 
+            
+            while (null != (strEngLn = rd.readLine())) 
             {
-                strEngLn = scanner.nextLine().toLowerCase();                         //first line from dictionary (eng and cro together separated with tab
+                //strEngLn = scanner.nextLine().toLowerCase();                         //first line from dictionary (eng and cro together separated with tab
         
-                   boolean b = strEngLn.startsWith(trazi);             // find out if current line begins with wanted word
+                   boolean b = strEngLn.toLowerCase().startsWith(trazi);             // find out if current line begins with wanted word
                    if (b)
                    {
                         int a = strEngLn.indexOf("\t");                //find location of tab key which eng and cro words are separated with
@@ -135,7 +183,8 @@ public class Gui extends javax.swing.JFrame {
             jTextArea1.setText(strFinish);  //finally make everything appear
             jTextArea1.setCaretPosition(0); //scroll text to the top
          }
-            catch (FileNotFoundException e) 
+            //catch (FileNotFoundException e)
+            catch(IOException e)
             {
                 jTextArea1.setText(e.getMessage());
                 //print error in text area
