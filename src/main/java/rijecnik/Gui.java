@@ -6,6 +6,7 @@
 package rijecnik;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 
@@ -21,7 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class Gui extends javax.swing.JFrame {
     
-    public void DoCro()
+    public void DoCro() 
             
             /**
              * This method populate right text area, it searches
@@ -55,10 +56,13 @@ public class Gui extends javax.swing.JFrame {
             
             //Load databases directly from .jar
              InputStream inp = getClass().getClassLoader().getResourceAsStream("EHCro-ansi.txt");
-             BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
-             
-             try 
+             //File fileDirs = new File(getClass().getClassLoader().getResourceAsStream("EHCro-ansi.txt");
+             //BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
+              try 
              {
+             BufferedReader rd = new BufferedReader(new InputStreamReader(inp,"Windows-1250"));
+             
+            
                 while (null != (strEngLn = rd.readLine()))  //first line from dictionary (eng and cro together separated with tab 
                 {
                    //find location of TabKey which separates translation
@@ -71,14 +75,17 @@ public class Gui extends javax.swing.JFrame {
                             {
                                 //separate english and croatian words
                                 strEng1 = strEngLn.substring(0,a);         
-                                strCro1 = strEngLn.substring(a+1);         
+                                strCro1 = strEngLn.substring(a+1);
+                                
                             
                                 //if cro word is same as last one from the loop
                                 //there are possibly many same words with different meaning
                                 if (strEngDouble.equals(strCro1))          
                                 {
                                     //if cro word is same like last one, just add cro word on top
-                                    strFinish = strFinish + ", " + strCro1; 
+                                    //strFinish = strFinish + ", " + strCro1;
+                                    strFinish = strFinish + ", " + strEng1;
+                                    
                                 }
                                 else
                                 {
@@ -143,9 +150,11 @@ public class Gui extends javax.swing.JFrame {
         //try (Scanner scanner = new Scanner(new File("./EHEng-ansi.txt")))
         //try (Scanner scanner = new Scanner(new File("EHEng-ansi.txt")))
         InputStream inp = getClass().getClassLoader().getResourceAsStream("EHEng-ansi.txt");
-             BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
-             try
+             //BufferedReader rd = new BufferedReader(new InputStreamReader(inp));
+                          try
         {
+             BufferedReader rd = new BufferedReader(new InputStreamReader(inp,"Windows-1250"));
+
             
             while (null != (strEngLn = rd.readLine())) 
             {
@@ -220,6 +229,7 @@ public class Gui extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("English-Croatian dictionary");
 
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -261,11 +271,12 @@ public class Gui extends javax.swing.JFrame {
         });
 
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        jTextArea1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
         jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
 
@@ -275,16 +286,20 @@ public class Gui extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(237, 237, 237)
-                        .addComponent(jButton2))
-                    .addComponent(jScrollPane2))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -297,7 +312,7 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
